@@ -41,6 +41,7 @@ Pencarian hanya aktif pada hasil build. Untuk menguji pencarian, jalankan `npm r
 | `npm run build` | Build produksi ke `dist/`, termasuk indeks Pagefind |
 | `npm run preview` | Pratinjau hasil build |
 | `npm run check` | Cek tipe dan validasi Astro |
+| `npm test` | Jalankan test Vitest |
 | `npm run new -- "Judul catatan"` | Buat catatan baru dari template |
 
 ## Menulis catatan

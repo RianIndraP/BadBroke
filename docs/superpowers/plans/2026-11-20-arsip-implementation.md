@@ -474,8 +474,23 @@ git commit -m "feat: add Tailwind design shell"
 
 ```bash
 npm install yaml@2.9.1 unist-util-visit@5.2.0
+npm install @astrojs/markdown-remark@7.3.10
 npm install -D vitest@5.1.1 @types/mdast@4.0.4
 ```
+
+Astro 7 memakai Sätteri sebagai prosesor Markdown default. Plugin `remark` hanya berjalan bila `@astrojs/markdown-remark` terpasang. Daftarkan plugin lewat `markdown.processor`:
+
+```js
+import { unified } from '@astrojs/markdown-remark';
+
+markdown: {
+  processor: unified({
+    remarkPlugins: [[remarkWikiLinks, { resolve: resolveWikiLink }]],
+  }),
+},
+```
+
+Jangan memakai `markdown.remarkPlugins`; bidang itu sudah deprecated di Astro 7.
 
 ### 3.2 File yang dibuat
 
@@ -483,6 +498,7 @@ npm install -D vitest@5.1.1 @types/mdast@4.0.4
 - `src/lib/wiki-links.ts`: parser `[[...]]` dan plugin Markdown.
 - `src/lib/graph.ts`: node, edge, backlink, related, validasi.
 - `src/lib/slug.ts`: pembuat slug dari judul.
+- `astro.config.mjs`: plugin `remark` untuk tautan `[[slug]]` lewat `markdown.processor`.
 - `tests/wiki-links.test.ts`
 - `tests/graph.test.ts`
 - `tests/slug.test.ts`
@@ -508,6 +524,8 @@ draft: false
 - `tags`: 1 sampai 3, huruf kecil, kebab-case.
 - `draft`: default `false`.
 
+Di Astro 7, impor `z` dari `astro/zod`. Impor `z` dari `astro:content` masih jalan tetapi sudah deprecated dan akan dihapus di Astro 8. `defineCollection` tetap diimpor dari `astro:content`.
+
 ### 3.4 Aturan tautan
 
 - `[[cara-kerja-http]]` menjadi tautan dengan judul catatan.
@@ -530,6 +548,7 @@ draft: false
 
 ```bash
 npm test
+npm run check
 npm run build
 ```
 
