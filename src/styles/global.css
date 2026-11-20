@@ -1,0 +1,110 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+    --bg: #f4f5f2;
+    --surface: #fbfcfa;
+    --ink: #15191b;
+    --muted: #59635e;
+    --line: #d8ddd8;
+    --accent: #0e6b4f;
+    --accent-soft: #e3efe9;
+    color-scheme: light;
+}
+
+[data-theme="dark"] {
+    --bg: #0b0614;
+    --surface: #140b24;
+    --ink: #f0e9ff;
+    --muted: #a99bc4;
+    --line: #2e2147;
+    --accent: #ff4fd8;
+    --accent-soft: #2a0f2e;
+    color-scheme: dark;
+}
+
+[data-theme="dark"] .wordmark-dot {
+    text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 65%, transparent);
+}
+
+[data-theme="dark"] :focus-visible:not(main) {
+    box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+@theme inline {
+    --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+    --font-serif: "Newsreader Variable", ui-serif, Georgia, serif;
+    --color-paper: var(--bg);
+    --color-surface: var(--surface);
+    --color-ink: var(--ink);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+    --color-accent: var(--accent);
+    --color-accent-soft: var(--accent-soft);
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3 {
+        font-family: var(--font-serif);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+
+    a {
+        color: var(--accent);
+    }
+
+    ::selection {
+        background: var(--accent);
+        color: var(--bg);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+.skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -100px;
+    z-index: 50;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+}
+
+.skip-link:focus {
+    top: 1rem;
+}

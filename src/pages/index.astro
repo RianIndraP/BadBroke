@@ -1,12 +1,15 @@
-<!doctype html>
-<html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Arsip</title>    
-  </head>
-  <body>
-    <h1>Arsip</h1>
-    <p>Catatan yang saling terhubung.</p>
-  </body>
-</html>
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+	<section class="mx-auto w-full max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+		<h1 class="max-w-3xl text-balance font-serif text-4xl leading-[1.1] sm:text-5xl">
+			Catatan yang saling terhubung.
+		</h1>
+		<p class="mt-5 max-w-2xl text-pretty text-lg leading-relaxed text-muted">
+			Arsip materi yang saya pelajari, tumbuh jadi peta yang bisa dijelajahi.
+			Cari langsung atau ikuti tautannya.
+		</p>
+	</section>
+</BaseLayout>

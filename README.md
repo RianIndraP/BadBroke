@@ -188,7 +188,7 @@ Gambar OG per catatan belum ada di v1. Semua halaman memakai `public/og.png`.
 ## Desain
 
 - Token warna dan tipografi ada di `src/styles/global.css`.
-- Satu aksen hijau dipakai untuk tautan, fokus, chip aktif, dan titik graph. Jangan menambah aksen kedua.
+- Satu aksen per mode: hijau di mode terang, magenta di mode gelap. Jangan menambah aksen kedua.
 - Mode terang dan gelap sama-sama diuji.
 - Font: Newsreader untuk judul dan isi, Geist untuk antarmuka.
 - Radius: tombol dan chip pill, panel 14 px, kode 8 px.

@@ -263,7 +263,7 @@ export const siteConfig = {
 
 ### 2.6 Buat token desain
 
-Buat `src/styles/global.css` dengan isi berikut:
+Buat `src/styles/global.css` dengan isi berikut. Mode terang tetap hijau editorial. Mode gelap memakai palet synthwave tenang: violet gelap, teks lavender, aksen magenta.
 
 ```css
 @import "tailwindcss";
@@ -282,14 +282,22 @@ Buat `src/styles/global.css` dengan isi berikut:
 }
 
 [data-theme="dark"] {
-  --bg: #0c1210;
-  --surface: #121a16;
-  --ink: #e7ece8;
-  --muted: #9aa8a0;
-  --line: #24302a;
-  --accent: #5bd6a8;
-  --accent-soft: #17352b;
+  --bg: #0b0614;
+  --surface: #140b24;
+  --ink: #f0e9ff;
+  --muted: #a99bc4;
+  --line: #2e2147;
+  --accent: #ff4fd8;
+  --accent-soft: #2a0f2e;
   color-scheme: dark;
+}
+
+[data-theme="dark"] .wordmark-dot {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 65%, transparent);
+}
+
+[data-theme="dark"] :focus-visible:not(main) {
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
 @theme inline {
@@ -391,6 +399,7 @@ Perilaku yang harus ada:
 
 **Header**
 - Wordmark `arsip.`
+- Titik wordmark memakai class `wordmark-dot` agar mendapat glow magenta tipis di mode gelap.
 - Tautan Catatan, Topik, Tentang.
 - Tombol tema.
 - Satu baris di desktop dan 360 px.

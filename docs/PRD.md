@@ -16,7 +16,7 @@
 | Konten | Markdown + frontmatter, tautan ala Obsidian `[[slug]]` |
 | Graph | React island + `d3-force` di canvas |
 | Pencarian | Pagefind, dimuat saat dialog dibuka |
-| Gaya | Editorial-tech tenang, satu aksen hijau, terang dan gelap |
+| Gaya | Editorial-tech tenang; mode terang hijau, mode gelap synthwave magenta |
 | SEO | HTML statis, sitemap, RSS, JSON-LD, metadata per halaman |
 | Deploy | Vercel atau static host lain, tanpa backend |
 | Nama | "Arsip" sebagai nama kerja, bisa diganti di `src/config.ts` |
@@ -312,9 +312,9 @@ Dials: `DESIGN_VARIANCE 6`, `MOTION_INTENSITY 4`, `VISUAL_DENSITY 4`.
 ### Prinsip
 
 - Graph adalah aset visual utama dan berasal dari data nyata. Tidak ada stok foto, ilustrasi dekoratif, atau tangkapan layar palsu.
-- Ketenangan datang dari tipografi, ruang kosong, dan satu aksen. Bukan dari gradien, glow, atau animasi di mana-mana.
-- Satu tema per halaman. Mode terang dan gelap sama-sama dirancang, bukan dibalik otomatis.
-- Satu aksen dipakai konsisten untuk tautan, fokus, chip aktif, dan titik graph yang aktif.
+- Ketenangan datang dari tipografi, ruang kosong, dan satu aksen per mode. Glow hanya dipakai tipis di titik wordmark dan fokus mode gelap, bukan di latar atau teks isi.
+- Satu tema per halaman. Mode terang hijau dan mode gelap synthwave sama-sama dirancang, bukan dibalik otomatis.
+- Satu aksen per mode: hijau di terang, magenta di gelap. Dipakai konsisten untuk tautan, fokus, chip aktif, dan titik graph yang aktif.
 - Tanpa kartu untuk konten yang bisa dipisahkan garis dan ruang.
 - Tanpa em dash di seluruh teks yang tampil. Hanya tanda hubung biasa.
 
@@ -322,15 +322,17 @@ Dials: `DESIGN_VARIANCE 6`, `MOTION_INTENSITY 4`, `VISUAL_DENSITY 4`.
 
 | Token | Terang | Gelap |
 |---|---|---|
-| Latar | `#f4f5f2` | `#0c1210` |
-| Permukaan | `#fbfcfa` | `#121a16` |
-| Teks | `#15191b` | `#e7ece8` |
-| Teks muted | `#59635e` | `#9aa8a0` |
-| Garis | `#d8ddd8` | `#24302a` |
-| Aksen | `#0e6b4f` | `#5bd6a8` |
-| Aksen lembut | `#e3efe9` | `#17352b` |
+| Latar | `#f4f5f2` | `#0b0614` |
+| Permukaan | `#fbfcfa` | `#140b24` |
+| Teks | `#15191b` | `#f0e9ff` |
+| Teks muted | `#59635e` | `#a99bc4` |
+| Garis | `#d8ddd8` | `#2e2147` |
+| Aksen | `#0e6b4f` | `#ff4fd8` |
+| Aksen lembut | `#e3efe9` | `#2a0f2e` |
 
 Kontras teks minimal 4,5:1. Kontras aksen di latar minimal 4,5:1 untuk teks. Semua pasangan diuji di kedua mode.
+
+Kontras mode gelap: teks 16,9:1, muted 7,8:1, aksen 7,0:1 terhadap latar. Semua di atas 4,5:1.
 
 ### Tipografi
 
@@ -354,7 +356,7 @@ Kontras teks minimal 4,5:1. Kontras aksen di latar minimal 4,5:1 untuk teks. Sem
 - Tanpa eyebrow di setiap section. Situs ini memakai nol eyebrow.
 - Tanpa penomoran section, label versi, penanda "scroll", strip lokasi atau waktu, dan titik status dekoratif.
 - Tanpa tiga kartu fitur sejajar, tanpa grid kartu untuk catatan, tanpa progress bar hiasan.
-- Tanpa gradien ungu atau glow. Tanpa kursor kustom.
+- Tanpa gradien latar, grid horizon, aksen kedua, atau glow dekoratif di luar titik wordmark dan fokus mode gelap. Tanpa kursor kustom.
 - Tanpa gambar palsu dari div. Graph adalah kanvas data nyata.
 - Tombol wajib lolos kontras dan label tidak boleh terbungkus dua baris di desktop.
 

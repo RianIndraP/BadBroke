@@ -1,0 +1,49 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button
+	type="button"
+	id="theme-toggle"
+	class="ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-line text-muted transition-colors hover:border-accent hover:text-accent"
+	aria-label="Ganti ke mode gelap">
+	<Icon
+		name="ph:moon"
+		class="size-4 dark:hidden"
+		aria-hidden="true"
+	/>
+	<Icon
+		name="ph:sun"
+		class="hidden size-4 dark:block"
+		aria-hidden="true"
+	/>
+</button>
+
+<script is:inline>
+	(() => {
+		const button = document.getElementById("theme-toggle");
+		if (!button) return;
+
+		const root = document.documentElement;
+		const setLabel = () => {
+			const dark = root.dataset.theme === "dark";
+			button.setAttribute(
+				"aria-label",
+				dark ? "Ganti ke mode terang" : "Ganti ke mode gelap",
+			);
+		};
+
+		setLabel();
+
+		button.addEventListener("click", () => {
+			const next = root.dataset.theme === "dark" ? "light" : "dark";
+			root.dataset.theme = next;
+			try {
+				localStorage.setItem("theme", next);
+			} catch {
+				// localStorage bisa diblokir; tema tetap berlaku untuk sesi ini.
+			}
+			setLabel();
+		});
+	})();
+</script>
