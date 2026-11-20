@@ -1,0 +1,105 @@
+---
+import { getCollection } from "astro:content";
+import TopicChips from "../components/TopicChips.astro";
+import { siteConfig } from "../config";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { collectTags, prepareNotes } from "../lib/notes";
+
+const entries = await getCollection("catatan");
+const notes = prepareNotes(entries, {
+	includeDrafts: import.meta.env.DEV,
+	strict: import.meta.env.PROD,
+});
+const topics = collectTags(notes).slice(0, 8);
+const contactValue = siteConfig.contact.trim();
+const contactHref = contactValue
+	? /^(?:https?:|mailto:)/.test(contactValue)
+		? contactValue
+		: `mailto:${contactValue}`
+	: null;
+---
+
+<BaseLayout
+	title="Tentang"
+	description="Tentang Arsip, penulis, dan cara situs ini dibangun.">
+	<div class="mx-auto w-full max-w-3xl px-5 py-12 sm:px-8 sm:py-16">
+		<article class="max-w-2xl">
+			<h1 class="font-serif text-4xl leading-tight">Tentang</h1>
+			<p class="mt-5 text-pretty font-serif text-xl leading-relaxed text-muted">
+				Arsip adalah kumpulan catatan yang saya pelajari, ditulis ulang
+				dengan bahasa sendiri, dan dihubungkan satu sama lain.
+			</p>
+
+			<section class="mt-10">
+				<h2 class="font-serif text-2xl">Siapa yang menulis</h2>
+				<p class="mt-3 leading-relaxed">
+					Situs ini ditulis dan dirawat oleh {siteConfig.author}. Isinya
+					beragam topik yang sedang saya pelajari, dari web dan desain
+					sampai hal lain yang ingin saya pahami lebih baik.
+				</p>
+			</section>
+
+			<section class="mt-8">
+				<h2 class="font-serif text-2xl">Cara situs ini dibangun</h2>
+				<p class="mt-3 leading-relaxed">
+					Arsip adalah situs statis tanpa akun, komentar, atau basis data.
+					Semua halaman dibangun dari file Markdown memakai Astro dan
+					Tailwind CSS. Catatan saling tertaut dengan
+					<code class="rounded border border-line bg-accent-soft px-1.5 py-0.5 text-sm">[[slug]]</code>,
+					lalu tautan itu menjadi peta yang bisa dijelajahi.
+				</p>
+				<p class="mt-3 leading-relaxed">
+					Peta catatan memakai d3-force di atas canvas. Pencarian memakai
+					Pagefind dan dimuat hanya saat dibutuhkan.
+				</p>
+			</section>
+
+			<section class="mt-8">
+				<h2 class="font-serif text-2xl">Topik yang dibahas</h2>
+				{topics.length > 0 ? (
+					<div class="mt-4">
+						<TopicChips
+							topics={topics}
+							label="Topik yang dibahas"
+						/>
+						<a
+							href="/topik/"
+							class="mt-3 inline-block text-sm text-muted underline underline-offset-4 hover:text-accent">
+							Semua topik
+						</a>
+					</div>
+				) : (
+					<p class="mt-3 text-muted">Belum ada topik.</p>
+				)}
+			</section>
+
+			{contactHref && (
+				<section class="mt-8">
+					<h2 class="font-serif text-2xl">Kontak</h2>
+					<p class="mt-3 leading-relaxed">
+						<a
+							href={contactHref}
+							class="underline underline-offset-4 hover:text-accent">
+							Kirim pesan
+						</a>
+					</p>
+				</section>
+			)}
+
+			<nav
+				aria-label="Jelajahi Arsip"
+				class="mt-10 flex flex-wrap gap-3 border-t border-line/70 pt-8">
+				<a
+					href="/"
+					class="rounded-full border border-line px-5 py-2.5 text-sm transition-colors hover:border-accent hover:text-accent">
+					Ke beranda
+				</a>
+				<a
+					href="/catatan/"
+					class="rounded-full border border-line px-5 py-2.5 text-sm transition-colors hover:border-accent hover:text-accent">
+					Semua catatan
+				</a>
+			</nav>
+		</article>
+	</div>
+</BaseLayout>

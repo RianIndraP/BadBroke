@@ -1,0 +1,48 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { collectTags, formatTag, prepareNotes } from "../../lib/notes";
+
+const entries = await getCollection("catatan");
+const notes = prepareNotes(entries, {
+	includeDrafts: import.meta.env.DEV,
+	strict: import.meta.env.PROD,
+});
+const topics = collectTags(notes);
+---
+
+<BaseLayout
+	title="Topik"
+	description="Semua topik yang dibahas di Arsip, lengkap dengan jumlah catatan.">
+	<div class="mx-auto w-full max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
+		<header class="max-w-2xl">
+			<h1 class="font-serif text-4xl leading-tight">Topik</h1>
+			<p class="mt-3 text-muted">
+				Catatan dikelompokkan menurut topik yang dibahas.
+			</p>
+		</header>
+
+		{
+			topics.length === 0 ? (
+				<p class="mt-8 text-muted">Belum ada topik.</p>
+			) : (
+				<ul class="mt-8 divide-y divide-line/70 border-y border-line/70">
+					{topics.map(({ tag, count }) => (
+						<li>
+							<a
+								href={`/topik/${tag}/`}
+								class="group flex items-baseline justify-between gap-4 py-4">
+								<span class="font-serif text-xl transition-colors group-hover:text-accent">
+									{formatTag(tag)}
+								</span>
+								<span class="shrink-0 text-sm text-muted">
+									{count} catatan
+								</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			)
+		}
+	</div>
+</BaseLayout>

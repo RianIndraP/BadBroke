@@ -14,7 +14,7 @@ Cara pakai:
 2. Nama file menjadi URL: /catatan/nama-file
 3. Isi summary 120-160 karakter. Dipakai di daftar dan meta description.
 4. Ganti tag dengan 1-3 tag yang sudah dipakai catatan lain.
-5. Tautkan minimal satu catatan lain dengan [[nama-file]].
+5. Tautkan minimal satu catatan lain dengan `[[nama-file]]`.
 6. Ubah draft menjadi false saat siap terbit.
 7. Hapus komentar ini.
 -->

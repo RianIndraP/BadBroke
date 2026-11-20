@@ -1,0 +1,56 @@
+---
+import { getCollection } from "astro:content";
+import NoteList from "../../components/NoteList.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { groupByYear, prepareNotes } from "../../lib/notes";
+
+const entries = await getCollection("catatan");
+const notes = prepareNotes(entries, {
+	includeDrafts: import.meta.env.DEV,
+	strict: import.meta.env.PROD,
+});
+const years = groupByYear(notes);
+---
+
+<BaseLayout
+	title="Semua catatan"
+	description="Semua catatan di Arsip, dikelompokkan per tahun.">
+	<div class="mx-auto w-full max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
+		<header class="max-w-2xl">
+			<h1 class="font-serif text-4xl leading-tight">Semua catatan</h1>
+			<p class="mt-3 text-muted">
+				{notes.length > 0
+					? `${notes.length} catatan, terbaru di atas.`
+					: "Arsip ini masih kosong."}
+			</p>
+		</header>
+
+		{
+			notes.length === 0 ? (
+				<div class="mt-8">
+					<NoteList
+						notes={[]}
+						emptyMessage="Belum ada catatan."
+						emptyHref="/tentang/"
+						emptyLabel="Tentang arsip ini"
+					/>
+				</div>
+			) : (
+				years.map(({ year, notes: items }) => (
+					<section
+						class="mt-10"
+						aria-labelledby={`tahun-${year}`}>
+						<h2
+							id={`tahun-${year}`}
+							class="font-serif text-2xl">
+							{year}
+						</h2>
+						<div class="mt-3">
+							<NoteList notes={items} />
+						</div>
+					</section>
+				))
+			)
+		}
+	</div>
+</BaseLayout>

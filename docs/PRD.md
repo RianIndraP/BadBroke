@@ -174,6 +174,7 @@ draft: false
 - `[[slug]]` menjadi tautan ke catatan tersebut, dengan judul catatan sebagai teks.
 - `[[slug|teks tampil]]` memakai teks tampilan sendiri.
 - Target wajib ada. Build produksi gagal jika target tidak ditemukan, menunjuk ke draft, atau menunjuk ke diri sendiri.
+- Tautan dari catatan draft tidak diperiksa sampai draft diterbitkan. Tautan publik yang menunjuk draft tetap menggagalkan build.
 - Tautan di dalam blok kode dan inline code diabaikan.
 - Tautan ganda dihitung satu.
 - Semua tautan bersifat dua arah untuk keperluan graph, tetapi ditampilkan sebagai tautan biasa.
@@ -391,7 +392,9 @@ Kontras mode gelap: teks 16,9:1, muted 7,8:1, aksen 7,0:1 terhadap latar. Semua 
 ├── public/
 │   ├── favicon.svg
 │   └── og.png
-├── scripts/new-note.mjs
+├── scripts/
+│   ├── new-note.ts
+│   └── validate-notes.mjs
 ├── src/
 │   ├── components/
 │   │   ├── GraphExplorer.tsx
@@ -463,7 +466,7 @@ Kontras mode gelap: teks 16,9:1, muted 7,8:1, aksen 7,0:1 terhadap latar. Semua 
 
 - `astro check` untuk tipe.
 - Vitest: parsing `[[...]]`, pengabaian kode, deteksi tautan putus, perhitungan degree, backlink, dan related.
-- `npm run build` sebagai pemeriksaan integrasi: skema, tautan, rute, RSS, sitemap.
+- `npm run build` sebagai pemeriksaan integrasi: skema, tautan, rute, RSS, sitemap. Script `prebuild` menjalankan `scripts/validate-notes.mjs` agar tautan putus dan judul duplikat menghentikan build dengan pesan yang menyebut file.
 - Uji manual: keyboard pencarian, mode gelap, 360 px, reduced motion, Lighthouse.
 
 ## 12. SEO

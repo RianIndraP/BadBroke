@@ -118,6 +118,8 @@ export function validateWikiLinks(notes: NoteInput[]): LinkError[] {
   const seen = new Set<string>();
 
   for (const note of notes) {
+    if (note.draft) continue;
+
     for (const link of parseWikiLinks(note.body)) {
       let reason: LinkError['reason'] | null = null;
 

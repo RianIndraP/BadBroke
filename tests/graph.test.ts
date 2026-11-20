@@ -139,6 +139,12 @@ describe('validateWikiLinks', () => {
     expect(validateWikiLinks([a, b])).toEqual([]);
   });
 
+  it('mengabaikan tautan dari draft', () => {
+    const draf = note('draf', { draft: true, body: '[[ghost]]' });
+
+    expect(validateWikiLinks([draf])).toEqual([]);
+  });
+
   it('melaporkan tautan ke diri sendiri', () => {
     const a = note('a', { body: '[[a]]' });
 

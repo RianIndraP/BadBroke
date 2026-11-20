@@ -13,8 +13,8 @@ interface Props {
 
 const { title, description = siteConfig.description } = Astro.props;
 const pageTitle = title
-	? `${title} - ${siteConfig.title}`
-	: `${siteConfig.title} - ${siteConfig.tagline}`;
+	? `${title} · ${siteConfig.title}`
+	: `${siteConfig.title} · ${siteConfig.tagline}`;
 ---
 
 <!doctype html>

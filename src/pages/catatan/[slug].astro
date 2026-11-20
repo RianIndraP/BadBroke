@@ -1,0 +1,178 @@
+---
+import { getCollection, render } from "astro:content";
+import NoteList from "../../components/NoteList.astro";
+import TopicChips from "../../components/TopicChips.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { findBacklinks, findRelated } from "../../lib/graph";
+import {
+	formatDate,
+	formatReadingTime,
+	prepareNotes,
+	type Note,
+	type NoteEntry,
+} from "../../lib/notes";
+
+export async function getStaticPaths() {
+	const entries = await getCollection("catatan");
+	const notes = prepareNotes(entries, {
+		includeDrafts: import.meta.env.DEV,
+		strict: import.meta.env.PROD,
+	});
+
+	return notes.flatMap((note) => {
+		const entry = entries.find((item) => item.id === note.id);
+		if (!entry) return [];
+
+		return [
+			{
+				params: { slug: note.id },
+				props: {
+					note,
+					entry,
+					backlinks: findBacklinks(notes, note.id),
+					related: findRelated(notes, note, 4),
+				},
+			},
+		];
+	});
+}
+
+interface Props {
+	note: Note;
+	entry: NoteEntry;
+	backlinks: Note[];
+	related: Note[];
+}
+
+const { note, entry, backlinks, related } = Astro.props;
+const { Content, headings } = await render(entry);
+const toc = headings.filter(
+	(heading) => heading.depth === 2 || heading.depth === 3,
+);
+const showToc = toc.length >= 3;
+const showUpdated =
+	note.updated !== undefined &&
+	note.updated.getTime() !== note.date.getTime();
+const dateAttribute = (date: Date) => date.toISOString().slice(0, 10);
+---
+
+<BaseLayout
+	title={note.title}
+	description={note.summary}>
+	<div
+		class:list={[
+			"mx-auto w-full max-w-5xl px-5 py-10 sm:px-8 sm:py-14",
+			showToc &&
+				"lg:grid lg:grid-cols-[minmax(0,1fr)_200px] lg:items-start lg:gap-14",
+		]}>
+		<article class="min-w-0 max-w-[68ch]">
+			<a
+				href="/catatan/"
+				class="text-sm text-muted underline underline-offset-4 hover:text-accent">
+				Semua catatan
+			</a>
+
+			<header class="mt-4">
+				<h1 class="text-balance font-serif text-4xl leading-tight sm:text-5xl">
+					{note.title}
+				</h1>
+
+				<div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted">
+					<time datetime={dateAttribute(note.date)}>
+						{formatDate(note.date)}
+					</time>
+					{showUpdated && note.updated && (
+						<span>
+							Diperbarui{" "}
+							<time datetime={dateAttribute(note.updated)}>
+								{formatDate(note.updated)}
+							</time>
+						</span>
+					)}
+					<span>{formatReadingTime(note.readingMinutes)}</span>
+					{note.draft && (
+						<span class="rounded-full border border-line px-2 py-0.5 text-xs tracking-wide uppercase">
+							Draft
+						</span>
+					)}
+				</div>
+
+				<div class="mt-4">
+					<TopicChips
+						topics={note.tags.map((tag) => ({ tag }))}
+						label="Topik catatan"
+					/>
+				</div>
+			</header>
+
+			<p class="mt-6 text-pretty font-serif text-xl leading-relaxed text-muted">
+				{note.summary}
+			</p>
+
+			<div class="prose prose-lg mt-8 max-w-none">
+				<Content />
+			</div>
+
+			{(backlinks.length > 0 || related.length > 0) && (
+				<footer class="mt-12 border-t border-line/70 pt-8">
+					{backlinks.length > 0 && (
+						<section aria-labelledby="ditautkan-dari">
+							<h2
+								id="ditautkan-dari"
+								class="font-serif text-2xl">
+								Ditautkan dari
+							</h2>
+							<div class="mt-3">
+								<NoteList
+									notes={backlinks}
+									variant="compact"
+								/>
+							</div>
+						</section>
+					)}
+
+					{related.length > 0 && (
+						<section
+							class:list={[
+								backlinks.length > 0 && "mt-8",
+							]}
+							aria-labelledby="catatan-terkait">
+							<h2
+								id="catatan-terkait"
+								class="font-serif text-2xl">
+								Catatan terkait
+							</h2>
+							<div class="mt-3">
+								<NoteList
+									notes={related}
+									variant="compact"
+								/>
+							</div>
+						</section>
+					)}
+				</footer>
+			)}
+		</article>
+
+		{showToc && (
+			<aside class="hidden lg:block">
+				<nav
+					aria-label="Daftar isi"
+					class="sticky top-8 text-sm">
+					<p class="font-medium">Daftar isi</p>
+					<ul class="mt-3 space-y-2 border-l border-line/70 pl-4">
+						{toc.map((heading) => (
+							<li class:list={[heading.depth === 3 && "pl-3"]}>
+								<a
+									href={`#${heading.slug}`}
+									class="text-muted transition-colors hover:text-accent">
+									{heading.text}
+								</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+			</aside>
+		)}
+	</div>
+</BaseLayout>

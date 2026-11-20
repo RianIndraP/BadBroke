@@ -1,0 +1,48 @@
+---
+import { formatTag } from "../lib/notes";
+
+interface Topic {
+	tag: string;
+	count?: number;
+}
+
+interface Props {
+	topics: Topic[];
+	activeTag?: string;
+	label?: string;
+}
+
+const { topics, activeTag, label = "Topik" } = Astro.props;
+---
+
+{
+	topics.length > 0 && (
+		<nav aria-label={label}>
+			<ul class="flex flex-wrap gap-2">
+				{topics.map(({ tag, count }) => {
+					const name = formatTag(tag);
+					return (
+						<li>
+							<a
+								href={`/topik/${tag}/`}
+								class="chip"
+								aria-current={activeTag === tag ? "page" : undefined}
+								aria-label={
+									typeof count === "number"
+										? `${name}, ${count} catatan`
+										: undefined
+								}>
+								{name}
+								{typeof count === "number" && (
+									<span class="text-xs opacity-70" aria-hidden="true">
+										{count}
+									</span>
+								)}
+							</a>
+						</li>
+					);
+				})}
+			</ul>
+		</nav>
+	)
+}

@@ -107,6 +107,7 @@ Aturan:
 - `[[slug]]` memakai judul catatan sebagai teks tautan.
 - `[[slug|teks]]` memakai teks yang kamu tulis.
 - Target wajib ada. Build produksi gagal jika target tidak ditemukan, masih draft, atau menunjuk ke diri sendiri.
+- Tautan dari catatan draft tidak diperiksa sampai draft diterbitkan. Jadi draft baru boleh berisi tautan placeholder, tetapi tautan publik yang menunjuk draft tetap menggagalkan build.
 - Tautan di dalam blok kode dan inline code diabaikan.
 - Tautan ini yang membentuk garis di graph dan bagian "Ditautkan dari" pada halaman catatan.
 - Catatan dengan tag sama otomatis muncul sebagai "Catatan terkait", maksimal empat.
@@ -122,11 +123,12 @@ Aturan:
 
 - Frontmatter sesuai skema.
 - Tanggal valid dan urutannya benar.
-- Setiap target `[[...]]` ada.
-- Tidak ada tautan ke draft di build produksi.
-- Judul tidak duplikat.
+- Setiap target `[[...]]` pada catatan terbit ada.
+- Tidak ada tautan dari catatan terbit ke draft.
+- Tidak ada tautan ke diri sendiri.
+- Judul catatan terbit tidak duplikat.
 
-Kalau ada yang salah, build berhenti dengan pesan yang menyebut file dan masalahnya.
+Pemeriksaan tautan dan judul berjalan lewat `scripts/validate-notes.mjs` sebelum Astro membangun halaman. Kalau ada yang salah, build berhenti dengan pesan yang menyebut file dan masalahnya. Tautan di dalam catatan draft belum diperiksa; tautan itu baru wajib benar saat draft diubah menjadi terbit.
 
 ## Struktur proyek
 
@@ -136,7 +138,9 @@ Kalau ada yang salah, build berhenti dengan pesan yang menyebut file dan masalah
 ├── public/
 │   ├── favicon.svg
 │   └── og.png
-├── scripts/new-note.mjs
+├── scripts/
+│   ├── new-note.ts          # Generator catatan
+│   └── validate-notes.mjs   # Validasi tautan dan judul sebelum build
 ├── src/
 │   ├── components/         # Header, footer, daftar catatan, graph, pencarian
 │   ├── content/catatan/    # Semua catatan .md

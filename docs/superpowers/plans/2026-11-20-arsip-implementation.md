@@ -580,7 +580,8 @@ git commit -m "feat: add content schema and graph data"
 - `src/pages/topik/[tag].astro`
 - `src/pages/tentang.astro`
 - `src/pages/404.astro`
-- `scripts/new-note.mjs`
+- `scripts/new-note.ts`
+- `scripts/validate-notes.mjs`: validasi tautan dan judul sebelum Astro berjalan.
 - `templates/catatan.md` sudah ada, tidak perlu dibuat ulang.
 
 ### 4.2 Perilaku halaman
@@ -610,6 +611,12 @@ git commit -m "feat: add content schema and graph data"
 - Tanggal diisi otomatis.
 - `draft: true` agar tidak langsung terbit.
 - Menolak menimpa file yang sudah ada.
+
+**Validasi sebelum build**
+- `prebuild` menjalankan `scripts/validate-notes.mjs` sebelum `astro build`.
+- Build berhenti dengan exit code 1 bila ada tautan putus, tautan ke draft, tautan ke diri sendiri, atau judul catatan terbit yang duplikat.
+- Tautan dari catatan draft tidak diperiksa sampai draft diterbitkan.
+- Pemeriksaan ini perlu karena Astro 7 di Windows bisa crash setelah `getStaticPaths` melempar error validasi. Dengan validator terpisah, pesan error tetap muncul utuh dan build berhenti bersih.
 
 ### 4.3 Cek wajib
 
@@ -869,7 +876,8 @@ Project1/
 │   ├── favicon.svg
 │   └── og.png
 ├── scripts/
-│   └── new-note.mjs
+│   ├── new-note.ts
+│   └── validate-notes.mjs
 ├── src/
 │   ├── components/
 │   ├── content/catatan/
