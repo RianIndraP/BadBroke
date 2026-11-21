@@ -3,6 +3,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import icon from 'astro-icon';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import tailwindcss from '@tailwindcss/vite';
 import { parse as parseYaml } from 'yaml';
@@ -55,7 +56,7 @@ function resolveWikiLink(target) {
 
 export default defineConfig({
     site: 'https://example.com',
-    integrations: [icon(), react()],
+    integrations: [icon(), react(), sitemap()],
     markdown: {
         processor: unified({
             remarkPlugins: [[remarkWikiLinks, { resolve: resolveWikiLink }]],

@@ -17,9 +17,17 @@ const graph = buildGraph(notes);
 const topics = collectTags(notes);
 const recent = notes.slice(0, siteConfig.recentNotes);
 const labelIds = selectLabelledNodes(graph.nodes).map((node) => node.id);
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	name: siteConfig.title,
+	url: siteConfig.url,
+	description: siteConfig.description,
+	inLanguage: "id",
+};
 ---
 
-<BaseLayout>
+<BaseLayout jsonLd={jsonLd}>
 	<section class="mx-auto w-full max-w-5xl px-5 pt-16 pb-10 sm:px-8 sm:pt-24">
 		<h1 class="max-w-3xl text-balance font-serif text-4xl leading-[1.1] sm:text-5xl">
 			Catatan yang saling terhubung.

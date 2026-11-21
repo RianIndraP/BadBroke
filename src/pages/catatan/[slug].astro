@@ -2,6 +2,7 @@
 import { getCollection, render } from "astro:content";
 import NoteList from "../../components/NoteList.astro";
 import TopicChips from "../../components/TopicChips.astro";
+import { siteConfig } from "../../config";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { findBacklinks, findRelated } from "../../lib/graph";
 import {
@@ -54,11 +55,30 @@ const showUpdated =
 	note.updated !== undefined &&
 	note.updated.getTime() !== note.date.getTime();
 const dateAttribute = (date: Date) => date.toISOString().slice(0, 10);
+const url = new URL(`/catatan/${note.id}/`, siteConfig.url).href;
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	headline: note.title,
+	description: note.summary,
+	datePublished: note.date.toISOString(),
+	dateModified: (note.updated ?? note.date).toISOString(),
+	author: { "@type": "Person", name: siteConfig.author },
+	inLanguage: "id",
+	keywords: note.tags.join(", "),
+	url,
+	mainEntityOfPage: { "@type": "WebPage", "@id": url },
+};
 ---
 
 <BaseLayout
 	title={note.title}
-	description={note.summary}>
+	description={note.summary}
+	type="article"
+	publishedTime={note.date}
+	modifiedTime={note.updated ?? note.date}
+	tags={note.tags}
+	jsonLd={jsonLd}>
 	<div
 		class:list={[
 			"mx-auto w-full max-w-5xl px-5 py-10 sm:px-8 sm:py-14",
