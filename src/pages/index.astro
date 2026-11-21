@@ -32,9 +32,16 @@ const labelIds = selectLabelledNodes(graph.nodes).map((node) => node.id);
 			{notes.length} catatan &middot; {topics.length} topik
 		</p>
 		<div class="mt-6 flex flex-wrap items-center gap-3">
+			<button
+				type="button"
+				data-search-open
+				hidden
+				class="inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-medium text-paper transition-opacity hover:opacity-90">
+				Cari catatan
+			</button>
 			<a
 				href="/catatan/"
-				class="inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-medium text-paper transition-opacity hover:opacity-90">
+				class="inline-flex min-h-11 items-center rounded-full border border-line px-5 text-sm transition-colors hover:border-accent hover:text-accent">
 				Semua catatan
 			</a>
 		</div>

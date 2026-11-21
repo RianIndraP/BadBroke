@@ -65,19 +65,29 @@ const dateAttribute = (date: Date) => date.toISOString().slice(0, 10);
 			showToc &&
 				"lg:grid lg:grid-cols-[minmax(0,1fr)_200px] lg:items-start lg:gap-14",
 		]}>
-		<article class="min-w-0 max-w-[68ch]">
+		<article class="min-w-0 max-w-[68ch]" data-pagefind-body>
 			<a
 				href="/catatan/"
+				data-pagefind-ignore
 				class="text-sm text-muted underline underline-offset-4 hover:text-accent">
 				Semua catatan
 			</a>
 
 			<header class="mt-4">
-				<h1 class="text-balance font-serif text-4xl leading-tight sm:text-5xl">
+				<h1
+					class="text-balance font-serif text-4xl leading-tight sm:text-5xl"
+					data-pagefind-meta="title">
 					{note.title}
 				</h1>
+				<span
+					hidden
+					data-pagefind-meta="tags[data-tags]"
+					data-tags={note.tags.join(", ")}>
+				</span>
 
-				<div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted">
+				<div
+					class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted"
+					data-pagefind-ignore>
 					<time datetime={dateAttribute(note.date)}>
 						{formatDate(note.date)}
 					</time>
@@ -97,7 +107,7 @@ const dateAttribute = (date: Date) => date.toISOString().slice(0, 10);
 					)}
 				</div>
 
-				<div class="mt-4">
+				<div class="mt-4" data-pagefind-ignore>
 					<TopicChips
 						topics={note.tags.map((tag) => ({ tag }))}
 						label="Topik catatan"
@@ -114,7 +124,7 @@ const dateAttribute = (date: Date) => date.toISOString().slice(0, 10);
 			</div>
 
 			{(backlinks.length > 0 || related.length > 0) && (
-				<footer class="mt-12 border-t border-line/70 pt-8">
+				<footer class="mt-12 border-t border-line/70 pt-8" data-pagefind-ignore>
 					{backlinks.length > 0 && (
 						<section aria-labelledby="ditautkan-dari">
 							<h2
@@ -155,7 +165,7 @@ const dateAttribute = (date: Date) => date.toISOString().slice(0, 10);
 		</article>
 
 		{showToc && (
-			<aside class="hidden lg:block">
+			<aside class="hidden lg:block" data-pagefind-ignore>
 				<nav
 					aria-label="Daftar isi"
 					class="sticky top-8 text-sm">

@@ -1,0 +1,116 @@
+---
+import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
+import { collectTags, formatTag, prepareNotes } from "../lib/notes";
+
+const entries = await getCollection("catatan");
+const topics = collectTags(
+	prepareNotes(entries, { includeDrafts: import.meta.env.DEV }),
+).slice(0, 6);
+---
+
+<dialog
+	id="search-dialog"
+	class="search-dialog"
+	aria-labelledby="search-title"
+	data-pagefind-ignore>
+	<div class="search-shell flex h-full flex-col overflow-hidden bg-surface text-ink sm:rounded-[14px] sm:border sm:border-line">
+		<div class="flex items-center gap-3 border-b border-line/70 px-4 py-2 sm:px-5">
+			<Icon
+				name="ph:magnifying-glass"
+				class="size-5 shrink-0 text-muted"
+				aria-hidden="true"
+			/>
+			<h2 id="search-title" class="sr-only">Cari catatan</h2>
+			<input
+				id="search-input"
+				type="search"
+				placeholder="Cari catatan..."
+				autocomplete="off"
+				spellcheck="false"
+				enterkeyhint="search"
+				role="combobox"
+				aria-autocomplete="list"
+				aria-haspopup="listbox"
+				aria-expanded="false"
+				aria-controls="search-results"
+				aria-describedby="search-status"
+				class="min-w-0 flex-1 bg-transparent py-2 text-base placeholder:text-muted"
+			/>
+			<button
+				type="button"
+				data-search-close
+				aria-label="Tutup pencarian"
+				class="inline-flex size-11 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:text-accent sm:size-9">
+				<Icon name="ph:x" class="size-5" aria-hidden="true" />
+			</button>
+		</div>
+
+		<div class="flex-1 overflow-y-auto px-3 py-3 sm:px-4">
+			<p
+				id="search-status"
+				class="px-2 py-1 text-sm text-muted"
+				role="status"
+				aria-live="polite"></p>
+
+			<div id="search-empty" class="px-2 py-6">
+				<p class="text-muted">Ketik judul, isi, atau topik catatan.</p>
+				{
+					topics.length > 0 && (
+						<div class="mt-5">
+							<p class="text-xs tracking-wide text-muted uppercase">Topik</p>
+							<div class="mt-2 flex flex-wrap gap-2">
+								{topics.map(({ tag, count }) => (
+									<button
+										type="button"
+										data-search-tag={tag}
+										class="chip cursor-pointer">
+										{formatTag(tag)}
+										<span class="text-xs opacity-70" aria-hidden="true">
+											{count}
+										</span>
+									</button>
+								))}
+							</div>
+						</div>
+					)
+				}
+			</div>
+
+			<ul
+				id="search-results"
+				class="space-y-1"
+				role="listbox"
+				aria-label="Hasil pencarian"
+				hidden>
+			</ul>
+
+			<div id="search-none" class="px-2 py-6" hidden>
+				<p class="text-muted">
+					Tidak ada hasil untuk <span class="font-medium text-ink" data-search-query></span>.
+				</p>
+				<a
+					href="/catatan/"
+					class="mt-2 inline-block underline underline-offset-4 hover:text-accent">
+					Lihat semua catatan
+				</a>
+			</div>
+
+			<div id="search-error" class="px-2 py-6" hidden>
+				<p id="search-error-text" class="text-muted">
+					Pencarian gagal dimuat. Coba muat ulang halaman.
+				</p>
+			</div>
+		</div>
+
+		<div class="hidden border-t border-line/70 px-5 py-3 text-xs text-muted sm:block">
+			<span><kbd>&uarr;</kbd> <kbd>&darr;</kbd> pilih</span>
+			<span aria-hidden="true"> &middot; </span>
+			<span><kbd>Enter</kbd> buka</span>
+			<span aria-hidden="true"> &middot; </span>
+			<span><kbd>Esc</kbd> tutup</span>
+		</div>
+	</div>
+</dialog>
+
+<script src="../scripts/search.ts"></script>
