@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
+import { siteConfig } from "../config";
 
 const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const links = [
@@ -20,7 +21,7 @@ const isActive = (href: string) => {
 			href="/"
 			aria-label="Arsip, kembali ke beranda"
 			class="font-serif text-xl font-semibold tracking-tight text-ink transition-colors hover:text-accent">
-			arsip<span class="wordmark-dot text-accent">.</span>
+			{siteConfig.title}<span class="wordmark-dot text-accent">.</span>
 		</a>
 
 		<nav
