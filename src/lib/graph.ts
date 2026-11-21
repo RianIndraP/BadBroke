@@ -70,6 +70,18 @@ export function buildGraph(notes: NoteInput[]): {
   };
 }
 
+export function selectLabelledNodes(
+  nodes: GraphNode[],
+  limit = 10,
+): GraphNode[] {
+  return [...nodes]
+    .filter((node) => node.degree > 0)
+    .sort(
+      (a, b) => b.degree - a.degree || a.title.localeCompare(b.title, 'id'),
+    )
+    .slice(0, Math.max(0, limit));
+}
+
 export function findBacklinks(notes: NoteInput[], id: string): NoteInput[] {
   return notes.filter(
     (note) =>

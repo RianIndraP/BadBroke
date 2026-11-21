@@ -1,9 +1,26 @@
 ---
+import { getCollection } from "astro:content";
+import GraphExplorer from "../components/GraphExplorer";
+import NoteList from "../components/NoteList.astro";
+import TopicChips from "../components/TopicChips.astro";
+import { siteConfig } from "../config";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { buildGraph, selectLabelledNodes } from "../lib/graph";
+import { collectTags, prepareNotes } from "../lib/notes";
+
+const entries = await getCollection("catatan");
+const notes = prepareNotes(entries, {
+	includeDrafts: import.meta.env.DEV,
+	strict: import.meta.env.PROD,
+});
+const graph = buildGraph(notes);
+const topics = collectTags(notes);
+const recent = notes.slice(0, siteConfig.recentNotes);
+const labelIds = selectLabelledNodes(graph.nodes).map((node) => node.id);
 ---
 
 <BaseLayout>
-	<section class="mx-auto w-full max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+	<section class="mx-auto w-full max-w-5xl px-5 pt-16 pb-10 sm:px-8 sm:pt-24">
 		<h1 class="max-w-3xl text-balance font-serif text-4xl leading-[1.1] sm:text-5xl">
 			Catatan yang saling terhubung.
 		</h1>
@@ -11,5 +28,61 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 			Arsip materi yang saya pelajari, tumbuh jadi peta yang bisa dijelajahi.
 			Cari langsung atau ikuti tautannya.
 		</p>
+		<p class="mt-4 text-sm text-muted">
+			{notes.length} catatan &middot; {topics.length} topik
+		</p>
+		<div class="mt-6 flex flex-wrap items-center gap-3">
+			<a
+				href="/catatan/"
+				class="inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-medium text-paper transition-opacity hover:opacity-90">
+				Semua catatan
+			</a>
+		</div>
+	</section>
+
+	<section
+		class="mx-auto w-full max-w-5xl px-5 pb-14 sm:px-8 sm:pb-20"
+		aria-labelledby="peta-catatan"
+		data-pagefind-ignore>
+		<h2 id="peta-catatan" class="sr-only">Peta catatan</h2>
+		<GraphExplorer
+			client:visible
+			nodes={graph.nodes}
+			edges={graph.edges}
+			topics={topics.slice(0, 6)}
+			labelIds={labelIds}
+		/>
+	</section>
+
+	<section class="mx-auto w-full max-w-5xl border-t border-line/70 px-5 py-12 sm:px-8 sm:py-16">
+		<div class="flex flex-wrap items-baseline justify-between gap-3">
+			<h2 class="font-serif text-2xl sm:text-3xl">Catatan terbaru</h2>
+			<a
+				href="/catatan/"
+				class="text-sm text-muted underline underline-offset-4 transition-colors hover:text-accent">
+				Semua catatan
+			</a>
+		</div>
+		<div class="mt-6">
+			<NoteList notes={recent} />
+		</div>
+	</section>
+
+	<section class="mx-auto w-full max-w-5xl border-t border-line/70 px-5 py-12 sm:px-8 sm:py-16">
+		<div class="flex flex-wrap items-baseline justify-between gap-3">
+			<h2 class="font-serif text-2xl sm:text-3xl">Topik</h2>
+			<a
+				href="/topik/"
+				class="text-sm text-muted underline underline-offset-4 transition-colors hover:text-accent">
+				Semua topik
+			</a>
+		</div>
+		<div class="mt-5">
+			{topics.length > 0 ? (
+				<TopicChips topics={topics.slice(0, 8)} />
+			) : (
+				<p class="text-muted">Belum ada topik.</p>
+			)}
+		</div>
 	</section>
 </BaseLayout>

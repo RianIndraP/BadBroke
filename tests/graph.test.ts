@@ -3,6 +3,7 @@ import {
   buildGraph,
   findBacklinks,
   findRelated,
+  selectLabelledNodes,
   validateWikiLinks,
   type NoteInput,
 } from '../src/lib/graph';
@@ -71,6 +72,46 @@ describe('buildGraph', () => {
 
     expect(graph.nodes.map((node) => node.id)).toEqual(['publik']);
     expect(graph.edges).toEqual([]);
+  });
+});
+
+describe('selectLabelledNodes', () => {
+  it('memilih node dengan degree tertinggi lebih dulu', () => {
+    const nodes = buildGraph([
+      note('a', { title: 'A', body: '[[b]] [[c]]' }),
+      note('b', { title: 'B', body: '[[c]]' }),
+      note('c', { title: 'C' }),
+    ]).nodes;
+
+    expect(selectLabelledNodes(nodes, 2).map((node) => node.id)).toEqual([
+      'a',
+      'b',
+    ]);
+  });
+
+  it('mengabaikan node tanpa tautan', () => {
+    const nodes = buildGraph([note('sendiri')]).nodes;
+
+    expect(selectLabelledNodes(nodes)).toEqual([]);
+  });
+
+  it('membatasi jumlah label dan mengurutkan seri menurut judul', () => {
+    const nodes = buildGraph([
+      note('z', { title: 'Zebra', body: '[[a]]' }),
+      note('a', { title: 'Anggur', body: '[[z]]' }),
+      note('m', { title: 'Mangga', body: '[[z]]' }),
+    ]).nodes;
+
+    expect(selectLabelledNodes(nodes, 2).map((node) => node.title)).toEqual([
+      'Zebra',
+      'Anggur',
+    ]);
+  });
+
+  it('mengembalikan daftar kosong bila batas nol', () => {
+    const nodes = buildGraph([note('a', { body: '[[b]]' }), note('b')]).nodes;
+
+    expect(selectLabelledNodes(nodes, 0)).toEqual([]);
   });
 });
 
