@@ -239,7 +239,9 @@ export default function GraphExplorer({
 					highlighted !== null && !highlighted.has(node.id);
 
 				if (dimmed && !focused) continue;
-				if (focused || labelled.has(node.id)) labelNode(node, focused);
+				if (focused || (width >= 640 && labelled.has(node.id))) {
+					labelNode(node, focused);
+				}
 			}
 		};
 

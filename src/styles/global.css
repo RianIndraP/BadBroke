@@ -212,6 +212,10 @@ body:has(.search-dialog[open]) {
     list-style: none;
 }
 
+#search-input::-webkit-search-cancel-button {
+    display: none;
+}
+
 .search-option {
     display: block;
     border-radius: 10px;
@@ -222,7 +226,7 @@ body:has(.search-dialog[open]) {
 }
 
 .search-option:hover,
-.search-option[aria-selected="true"] {
+[role="option"][aria-selected="true"] .search-option {
     background: var(--accent-soft);
 }
 
